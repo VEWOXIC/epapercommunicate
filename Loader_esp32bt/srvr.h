@@ -143,7 +143,7 @@ readagain:
         Serial.print("<<<LOAD");
         int dataSize = Buff__getWord(1);
         Serial.printf(" - %d",dataSize);
-        Srvr__length += dataSize;//已接收data长度
+        //Srvr__length += dataSize;//已接收data长度
                 
         //if ((Buff__bufInd < dataSize) || Srvr__length != Buff__getN3(3))//第一项 若本帧长度比当前指针位置长 第二项 是余数关于第三项，见buff n3注释 校验用 可删
         if ((Buff__bufInd < dataSize))
@@ -158,52 +158,27 @@ readagain:
        
         // Load data into the e-Paper 
         // if there is loading function for current channel (black or red)
-        if (EPD_dispLoad != 0) EPD_dispLoad();     //调用epd存放至显存
+        //if (EPD_dispLoad != 0) EPD_dispLoad();     //调用epd存放至显存
         int wordnumber=Buff__getByte(3);//第4位是序号
         int pictype=Buff__getByte(4);//第五位是类型
         Buff__load(wordnumber,pictype);
         
-        Srvr__write("load success\r\n");
+        //Srvr__write("load success\r\n");
         Serial.printf("successfuly load to %d %d",wordnumber,pictype);
 
         Buff__bufInd = 0;
         Srvr__flush();
     }
 
-    // Initialize next channel
-    else if (Buff__bufArr[0] == 'N')
-    {
-        // Print log message: next data channel
-        Serial.print("<<<NEXT");
-
-        // Instruction code for for writting data into 
-        // e-Paper's memory
-        int code = EPD_dispMass[EPD_dispIndex].next;
-
-        // e-Paper '2.7' (index 8) needs inverting of image data bits
-        EPD_invert = (EPD_dispIndex == 8);
-
-        // If the instruction code isn't '-1', then...
-        if (code != -1)
-        {
-            // Print log message: instruction code
-            Serial.printf(" %d", code);
-
-            // Do the selection of the next data channel
-            EPD_SendCommand(code);
-            delay(2);
-        }
-
-        // Setup the function for loading choosen channel's data
-        EPD_dispLoad = EPD_dispMass[EPD_dispIndex].chRd;
-
-        Buff__bufInd = 0;
-        Srvr__flush();
-    }
 
     // Show loaded picture
     else if (Buff__bufArr[0] == 'S')
     {
+        //EPD_dispMass[EPD_dispIndex].chBk(wordnumber,pictype);//下一句等价
+        int wordnumber=Buff__getByte(3);//第4位是序号 更改显示帧结构！！！
+        int pictype=Buff__getByte(4);//第五位是类型
+        EPD_loadA(wordnumber,pictype);
+        EPD_showA();
         EPD_dispMass[EPD_dispIndex].show();
                 
         Buff__bufInd = 0;

@@ -219,12 +219,31 @@ int  EPD_dispX, EPD_dispY; // Current pixel's coordinates (for 2.13 only)
 void(*EPD_dispLoad)();     // Pointer on a image data writting function
 
 /* Image data loading function for a-type e-Paper ----------------------------*/ 
-void EPD_loadA()
+void EPD_loadA(int wordnumber,int pictype)
 {
     // Get the index of the image data begin
-    int pos = 6;//6是数据位起始
+    //int pos = 6;//6是数据位起始
 
     // Enumerate all of image data bytes
+    if (pictype==0)
+    {
+        for(int i=6;i<Buff__SIZE;i++)
+        {
+            int value=pic_bank[wordnumber].word_image[i];
+            //if (EPD_invert) value = ~value;//单词页不反转
+            EPD_SendData((byte)value);
+        }
+    }
+    if (pictype==1)
+    {
+        for(int i=6;i<Buff__SIZE;i++)
+        {
+            int value=pic_bank[wordnumber].chs_image[i];
+            value = ~value;//释义页反转
+            EPD_SendData((byte)value);
+        }
+    }
+    /*)
     while (pos < Buff__bufInd)//buffind最后的位置
     {
         // Get current byte
@@ -238,7 +257,7 @@ void EPD_loadA()
 
         // Increment the current byte index on 2 characters
         pos++;
-    }
+    }*/
 }
 
 
@@ -261,9 +280,9 @@ void EPD_showA()
 struct EPD_dispInfo
 {
     int(*init)(); // Initialization
-    void(*chBk)();// Black channel loading
-    int next;     // Change channel code
-    void(*chRd)();// Red channel loading
+    //void(*chBk)();// Black channel loading
+    //int next;     // Change channel code
+    //void(*chRd)();// Red channel loading
     void(*show)();// Show and sleep
     char*title;   // Title of an e-Paper
 };
@@ -272,7 +291,7 @@ struct EPD_dispInfo
 EPD_dispInfo EPD_dispMass[] =
 {
    
-    { EPD_Init_2in9  , EPD_loadA, -1  , 0,         EPD_showA, "2.9 inch"    }// j 9
+    { EPD_Init_2in9  ,EPD_showA, "2.9 inch"    }// j 9
 
 };
 
@@ -283,7 +302,7 @@ void EPD_dispInit()
     EPD_dispMass[EPD_dispIndex].init();
 
     // Set loading function for black channel
-    EPD_dispLoad = EPD_dispMass[EPD_dispIndex].chBk;
+    //EPD_dispLoad = EPD_dispMass[EPD_dispIndex].chBk;
 
     // Set initial coordinates
     EPD_dispX = 0;

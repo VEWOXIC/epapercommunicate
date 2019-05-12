@@ -12,12 +12,12 @@ def sendframe(framedata,comport):
     ser.write(bytes(framedata[4500:]))
     ser.close()
     ser=serial.Serial(comport,115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
-    ser.write(b'E')#to end the read loop
+    ser.write(b'EEE')#to end the read loop
     print(str(ser.readline()))
     ser.close()
 
-def sereenshow(comport):
+def sereenshow(comport,wordindex,pictype):
     ser=serial.Serial(comport,115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
-    ser.write(b'S')
+    ser.write(bytes([83,0,0,wordindex,pictype]))
     print(str(ser.readline()))
     ser.close()

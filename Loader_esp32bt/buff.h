@@ -25,6 +25,7 @@ pic_buff pic_bank[8]={};//待解决内存限制
 /* Reads a byte from the buffer at specified position ------------------------*/
 int Buff__getByte(int index)
 {
+  Serial.println(Buff__bufArr[index]);
     return Buff__bufArr[index];
 }
 
@@ -66,6 +67,14 @@ void Buff__load(int wordnumber,int wordtype)
     for (int i=0;i<4742;i++)
     {
       pic_bank[wordnumber].word_image[i]=Buff__bufArr[i];
+      //pic_bank[wordnumber].word_image[i]=Buff__bufArr[i];
+    }
+  }
+    if (wordtype==1)
+  {
+    for (int i=0;i<4742;i++)
+    {
+      pic_bank[wordnumber].chs_image[i]=Buff__bufArr[i];
       //pic_bank[wordnumber].word_image[i]=Buff__bufArr[i];
     }
   }
