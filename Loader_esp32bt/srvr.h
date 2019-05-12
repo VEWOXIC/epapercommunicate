@@ -162,9 +162,10 @@ readagain:
         int wordnumber=Buff__getByte(3);//第4位是序号
         int pictype=Buff__getByte(4);//第五位是类型
         Buff__load(wordnumber,pictype);
+        if (Buff__load(wordnumber,pictype)) Serial.printf("successfuly load to %d %d",wordnumber,pictype);
         
         //Srvr__write("load success\r\n");
-        Serial.printf("successfuly load to %d %d",wordnumber,pictype);
+        //Serial.printf("successfuly load to %d %d",wordnumber,pictype);
 
         Buff__bufInd = 0;
         Srvr__flush();

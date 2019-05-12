@@ -243,21 +243,6 @@ void EPD_loadA(int wordnumber,int pictype)
             EPD_SendData((byte)value);
         }
     }
-    /*)
-    while (pos < Buff__bufInd)//buffind最后的位置
-    {
-        // Get current byte
-        int value = Buff__getByte(pos);
-
-        // Invert byte's bits in case of '2.7' e-Paper
-        if (EPD_invert) value = ~value;
-
-        // Write the byte into e-Paper's memory
-        EPD_SendData((byte)value);
-
-        // Increment the current byte index on 2 characters
-        pos++;
-    }*/
 }
 
 

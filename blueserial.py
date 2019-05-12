@@ -10,9 +10,10 @@ def sendframe(framedata,comport):
         print(str(ser.readline()))
         #ser.write(b'C')
     ser.write(bytes(framedata[4500:]))
-    ser.close()
-    ser=serial.Serial(comport,115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
-    ser.write(b'EEE')#to end the read loop
+    print(str(ser.readline()))
+    #ser.close()
+    #ser=serial.Serial(comport,115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
+    #ser.write(b'EEE')#to end the read loop
     print(str(ser.readline()))
     ser.close()
 
