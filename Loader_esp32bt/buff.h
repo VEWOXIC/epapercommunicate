@@ -16,7 +16,12 @@
 #define Buff__SIZE 4742
 int16_t     Buff__bufInd;
 char    Buff__bufArr[Buff__SIZE];
-
+struct pic_buff
+{
+    char word_image[Buff__SIZE];
+    char chs_image[Buff__SIZE];
+};
+pic_buff pic_bank[8]={};//待解决内存限制
 /* Reads a byte from the buffer at specified position ------------------------*/
 int Buff__getByte(int index)
 {
@@ -54,10 +59,14 @@ int Buff__signature(int index, char*str)
     // Otherwise return true
     return true;
 }
-struct pic_buff
+void Buff__load(int wordnumber,int wordtype)
 {
-    char word_image[Buff__SIZE];
-    char chs_image[Buff__SIZE];
-};
-pic_buff pic_bank[20]=
-{};
+  if (wordtype==0)
+  {
+    for (int i=0;i<4742;i++)
+    {
+      pic_bank[wordnumber].word_image[i]=Buff__bufArr[i];
+      //pic_bank[wordnumber].word_image[i]=Buff__bufArr[i];
+    }
+  }
+}

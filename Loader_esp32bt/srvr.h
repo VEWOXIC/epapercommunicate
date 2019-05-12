@@ -117,20 +117,6 @@ readagain:
       }
   }
 
-    /*
-    Serial.println();
-    Srvr__write("continue?");
-    while (Srvr__available())
-    {
-      int endcode=Srvr__read();
-      if (endcode=='C') 
-      {
-        Serial.print("restart");
-        goto readagain;
-    }
-    }
-*/
-
     // Initialization
     if (Buff__bufArr[0] == 'I')
     {
@@ -172,7 +158,13 @@ readagain:
        
         // Load data into the e-Paper 
         // if there is loading function for current channel (black or red)
-        if (EPD_dispLoad != 0) EPD_dispLoad();     //调用epd中
+        if (EPD_dispLoad != 0) EPD_dispLoad();     //调用epd存放至显存
+        int wordnumber=Buff__getByte(3);//第4位是序号
+        int pictype=Buff__getByte(4);//第五位是类型
+        Buff__load(wordnumber,pictype);
+        
+        Srvr__write("load success\r\n");
+        Serial.printf("successfuly load to %d %d",wordnumber,pictype);
 
         Buff__bufInd = 0;
         Srvr__flush();

@@ -41,7 +41,7 @@ def framemaker(image):
     #print(len(imgarr))
     k=0
     decacc=0
-    byteslist=[76,134,18,0,0,0]
+    byteslist=[76,134,18,0,0,0]#帧头 长度低八 长度高吧 词号 图片（0词1释义）
     for j in range(int(((128*296)/8))):
         for i in [128,64,32,16,8,4,2,1]:
             decacc=decacc+int(imgarr[k])*i
