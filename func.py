@@ -2,7 +2,22 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import random
 import numpy as np
 #import blueserial
-def bmpmaker(text1,text2):
+def word_bmpmaker(word):
+    width = 296
+    height = 128
+    image = Image.new('L', (width, height), (255))
+
+    # 创建Font对象:
+    font1 = ImageFont.truetype('Arial.ttf', 45)
+    #font2 = ImageFont.truetype('msyh.ttc', 50)
+    # 创建Draw对象:
+    draw = ImageDraw.Draw(image)
+    for t in range(4):
+        draw.text((0,35),word,font=font1,fill=0)
+        #draw.text((10,27),text2,font=font2,fill=0)
+    #image.save('code.bmp', 'bmp')
+    return image
+def chs_bmpmaker(pron,chs):
     width = 296
     height = 128
     image = Image.new('L', (width, height), (255))
@@ -13,9 +28,9 @@ def bmpmaker(text1,text2):
     # 创建Draw对象:
     draw = ImageDraw.Draw(image)
     for t in range(4):
-        draw.text((0,35),text1,font=font1,fill=0)
-        draw.text((10,27),text2,font=font2,fill=0)
-    image.save('code.bmp', 'bmp')
+        draw.text((0,35),pron,font=font1,fill=0)
+        draw.text((10,27),chs,font=font2,fill=0)
+    #image.save('code.bmp', 'bmp')
     return image
 def framemaker(image):
     imglst=(np.array(image)/255).T.tolist()
