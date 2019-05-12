@@ -106,14 +106,14 @@ readagain:
         Serial.print(q);
         Serial.print(',');
         Serial.println(Buff__bufInd);
-        if (Buff__bufInd==4742) break;
+        if (Buff__bufInd==4742) break;//数据接受结束后立即退出接受循环，
     }
-    if (Buff__bufArr[0]!='L') break;
+    if (Buff__bufArr[0]!='L') break;//数据帧接受完毕后依旧会进入等待循环
     Srvr__write("continue?\r\n");
     Serial.println("continue?\r\n");
     for (;Srvr__available()!=1;)
     {
-      if (Buff__bufInd==4742) break;
+      if (Buff__bufInd==4742) break;//等待循环强制退出，开始载入
       }
   }
 
