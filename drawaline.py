@@ -4,9 +4,6 @@ import numpy as np
 #import BytesIO
 
 # 随机字母:
-def rndChar():
-    return chr(random.randint(65, 90))
-
 width = 128
 height = 296
 image = Image.new('L', (width, height), (255))
