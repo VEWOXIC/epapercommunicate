@@ -60,4 +60,4 @@ struct pic_buff
     char chs_image[Buff__SIZE];
 };
 pic_buff pic_bank[20]=
-{}
+{};
