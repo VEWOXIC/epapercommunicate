@@ -49,4 +49,10 @@ def framemaker(image,wordindex,pictype):
         byteslist.append(decacc)
         decacc=0
     return byteslist
+    '''
+def send_word_page(new_word):
+    image=word_bmpmaker(input())
+    byteslist=framemaker(image,1,0)
+    blueserial.sendframe(byteslist,comport)
 
+'''
