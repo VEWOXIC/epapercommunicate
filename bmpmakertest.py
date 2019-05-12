@@ -20,12 +20,7 @@ for t in range(4):
 '''
 draw = ImageDraw.Draw(image)
 draw.line((0,0,128,296),fill=0)'''
-#imgarr=(np.array(image)/255).T.flatten()
-imglst=(np.array(image)/255).T.tolist()
-imgarr=[]
-for i in imglst:
-    i.reverse()
-    imgarr.extend(i)
+imgarr=(np.array(image)/255).T.flatten()
 print(len(imgarr))
 k=0
 decacc=0
