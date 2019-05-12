@@ -93,15 +93,39 @@ bool Srvr__loop()
     Buff__bufInd = 0;
 
     // While the stream of 'client' has some data do...
-    while (Srvr__available())
+readagain:
+  for (;Buff__bufInd < 4742;)
+  {
+        while (Srvr__available())
     {
         // Read a character from 'client'
         int q = Srvr__read();
-        Srvr__write("Ok!\n");
+        //Serial.println(q);
         // Save it in the buffer and increment its index
         Buff__bufArr[Buff__bufInd++] = (byte)q;
+        Serial.print(q);
+        Serial.print(',');
+        Serial.println(Buff__bufInd);
     }
+    if (Buff__bufArr[0]!='L') break;
+    Srvr__write("continue?\r\n");
+    for (;Srvr__available()!=1;)
+    {}
+  }
+
+    /*
     Serial.println();
+    Srvr__write("continue?");
+    while (Srvr__available())
+    {
+      int endcode=Srvr__read();
+      if (endcode=='C') 
+      {
+        Serial.print("restart");
+        goto readagain;
+    }
+    }
+*/
 
     // Initialization
     if (Buff__bufArr[0] == 'I')
@@ -131,7 +155,8 @@ bool Srvr__loop()
         Serial.printf(" - %d",dataSize);
         Srvr__length += dataSize;//已接收data长度
                 
-        if ((Buff__bufInd < dataSize) || Srvr__length != Buff__getN3(3))//第一项 若本帧长度比当前指针位置长 第二项 是余数关于第三项，见buff n3注释 校验用 可删
+        //if ((Buff__bufInd < dataSize) || Srvr__length != Buff__getN3(3))//第一项 若本帧长度比当前指针位置长 第二项 是余数关于第三项，见buff n3注释 校验用 可删
+        if ((Buff__bufInd < dataSize))
         {
             Buff__bufInd = 0;
             Srvr__flush();
@@ -197,6 +222,6 @@ bool Srvr__loop()
     delay(1);
 
     // Print log message: the end of request processing
-    Serial.print(">>>");
+    Serial.print(">>>\n");
     return true;
 }

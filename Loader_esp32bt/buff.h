@@ -14,7 +14,7 @@
 
 /* Size, current position index and byte array of the buffer -----------------*/
 #define Buff__SIZE 4742
-int     Buff__bufInd;
+int16_t     Buff__bufInd;
 char    Buff__bufArr[Buff__SIZE];
 
 /* Reads a byte from the buffer at specified position ------------------------*/
