@@ -24,7 +24,7 @@ def chs_bmpmaker(pron,chs):
 
     # 创建Font对象:
     font1 = ImageFont.truetype('Arial.ttf', 45)
-    font2 = ImageFont.truetype('msyh.ttc', 50)
+    font2 = ImageFont.truetype('msyh.ttc', 50)#待排版
     # 创建Draw对象:
     draw = ImageDraw.Draw(image)
     for t in range(4):

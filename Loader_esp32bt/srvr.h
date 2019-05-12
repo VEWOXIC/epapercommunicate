@@ -106,11 +106,15 @@ readagain:
         Serial.print(q);
         Serial.print(',');
         Serial.println(Buff__bufInd);
+        if (Buff__bufInd==4742) break;
     }
     if (Buff__bufArr[0]!='L') break;
     Srvr__write("continue?\r\n");
+    Serial.println("continue?\r\n");
     for (;Srvr__available()!=1;)
-    {}
+    {
+      if (Buff__bufInd==4742) break;
+      }
   }
 
     /*

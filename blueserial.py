@@ -10,8 +10,11 @@ def sendframe(framedata):
         print(str(ser.readline()))
         #ser.write(b'C')
     ser.write(bytes(framedata[4500:]))
-    #ser.write(b'E')
+    ser.close()
+    ser=serial.Serial('COM5',115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
+    ser.write(b'E')#to end the read loop
     print(str(ser.readline()))
+    ser.close()
 
 def sereenshow():
     ser=serial.Serial('COM5',115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
