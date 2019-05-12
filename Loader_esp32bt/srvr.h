@@ -109,7 +109,7 @@ readagain:
     }
     if (Buff__bufArr[0]!='L') break;
     Srvr__write("continue?\r\n");
-    for (;Srvr__available()!=1;)//等待下一部分数据重连,加入超时退出
+    for (;Srvr__available()!=1;)
     {}
   }
 
