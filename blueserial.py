@@ -1,7 +1,7 @@
+import serial
 def sendframe(framedata):
-    import serial
     import time
-    ser=serial.Serial('COM8',115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
+    ser=serial.Serial('COM5',115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
     ser.write(b'I')
     print(str(ser.readline()))
 
@@ -14,7 +14,7 @@ def sendframe(framedata):
     print(str(ser.readline()))
 
 def sereenshow():
-    ser=serial.Serial('COM8',115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
+    ser=serial.Serial('COM5',115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
     ser.write(b'S')
     print(str(ser.readline()))
     ser.close()

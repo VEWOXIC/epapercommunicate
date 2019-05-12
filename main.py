@@ -5,3 +5,5 @@ import blueserial
 image=word_bmpmaker('congratulation')
 byteslist=framemaker(image)
 blueserial.sendframe(byteslist)
+blueserial.sereenshow()#不知道为啥要多一次才能接收到
+blueserial.sereenshow()
