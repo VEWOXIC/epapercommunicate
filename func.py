@@ -14,7 +14,7 @@ def word_bmpmaker(word):
     # 创建Draw对象:
     draw = ImageDraw.Draw(image)
     length,_=draw.textsize(word,font1)#获取字体图像长度
-    print(length,_)
+    #print(length,_)
     draw.text((int((296-length)/2),35),word,font=font1,fill=0)#居中显示
 
     return image

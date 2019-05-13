@@ -21,7 +21,9 @@ def sendframe(framedata,comport):
     return endcode
 
 def sereenshow(comport,wordindex,pictype):
-    ser=serial.Serial(comport,115200,timeout=99999999999999999999,write_timeout=99999999999999999999)
+    ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
+    ser.write(b'I')
+    print(str(ser.readline()))#每个操作前必须初始化！！！
     ser.write(bytes([83,0,0,wordindex,pictype]))
     print("PC:show done")
     print(str(ser.readline()))
