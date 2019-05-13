@@ -1,7 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import random
 import numpy as np
-#import blueserial
+import blueserial
+import time
 def word_bmpmaker(word):
     width = 296
     height = 128
@@ -12,10 +13,10 @@ def word_bmpmaker(word):
     #font2 = ImageFont.truetype('msyh.ttc', 50)
     # 创建Draw对象:
     draw = ImageDraw.Draw(image)
-    for t in range(4):
-        draw.text((0,35),word,font=font1,fill=0)
-        #draw.text((10,27),text2,font=font2,fill=0)
-    #image.save('code.bmp', 'bmp')
+    length,_=draw.textsize(word,font1)#获取字体图像长度
+    print(length,_)
+    draw.text((int((296-length)/2),35),word,font=font1,fill=0)#居中显示
+
     return image
 def chs_bmpmaker(pron,chs):
     width = 296
@@ -23,13 +24,12 @@ def chs_bmpmaker(pron,chs):
     image = Image.new('L', (width, height), (255))
 
     # 创建Font对象:
-    font1 = ImageFont.truetype('Arial.ttf', 45)
-    font2 = ImageFont.truetype('msyh.ttc', 50)#待排版
+    font1 = ImageFont.truetype('Arial.ttf', 25)
+    font2 = ImageFont.truetype('msyh.ttc', 25)#待排版
     # 创建Draw对象:
     draw = ImageDraw.Draw(image)
-    for t in range(4):
-        draw.text((0,35),pron,font=font1,fill=0)
-        draw.text((10,27),chs,font=font2,fill=0)
+    draw.text((5,5),pron,font=font1,fill=0)
+    draw.text((5,27),chs,font=font2,fill=0)
     #image.save('code.bmp', 'bmp')
     return image
 def framemaker(image,wordindex,pictype):
@@ -49,10 +49,22 @@ def framemaker(image,wordindex,pictype):
         byteslist.append(decacc)
         decacc=0
     return byteslist
-    '''
-def send_word_page(new_word):
-    image=word_bmpmaker(input())
-    byteslist=framemaker(image,1,0)
-    blueserial.sendframe(byteslist,comport)
-
-'''
+    
+def send_new_word(new_word,pron,chs,word_index,comport):
+    image=word_bmpmaker(new_word)
+    byteslist=framemaker(image,word_index,0)#单词页0
+    while True:
+        a=blueserial.sendframe(byteslist,comport)
+        #print(a)
+        if a=='Ok!\n':
+            break
+    blueserial.sereenshow(comport,word_index,0)
+    time.sleep(5)
+    image=chs_bmpmaker(pron,chs)
+    byteslist=framemaker(image,word_index,1)#释义页1
+    while True:
+        a=blueserial.sendframe(byteslist,comport)
+        if a=='Ok!\n':
+            break
+    #time.sleep(0.05)'''
+    blueserial.sereenshow(comport,word_index,1)

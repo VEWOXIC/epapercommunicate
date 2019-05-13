@@ -93,9 +93,9 @@ bool Srvr__loop()
     Buff__bufInd = 0;
 
     // While the stream of 'client' has some data do...
-readagain:
   for (;Buff__bufInd < 4742;)
   {
+    //Srvr__write("ready\r\n");
         while (Srvr__available())
     {
         // Read a character from 'client'
@@ -103,19 +103,44 @@ readagain:
         //Serial.println(q);
         // Save it in the buffer and increment its index
         Buff__bufArr[Buff__bufInd++] = (byte)q;
-        Serial.print(q);
-        Serial.print(',');
-        Serial.println(Buff__bufInd);
+        //Serial.print(q);
+        //Serial.print(',');
+        //Serial.println(Buff__bufInd);
         if (Buff__bufInd==4742) break;//数据接受结束后立即退出接受循环，
     }
     if (Buff__bufArr[0]!='L') break;//数据帧接受完毕后依旧会进入等待循环
-    Srvr__write("continue?\r\n");
-    Serial.println("continue?\r\n");
-    for (;Srvr__available()!=1;)
+    //Srvr__write("continue?\r\n");
+    //Serial.println("continue?\r\n");
+    for (int timeout=0;Srvr__available()!=1;timeout++)
     {
-      if (Buff__bufInd==4742) break;//等待循环强制退出，开始载入
+      if (Buff__bufInd==4742) goto endrecv;//等待循环强制退出，开始载入
+      if (timeout==999999)
+      {
+        //Srvr__flush();
+        Srvr__write("timeout\r\n");
+        Serial.println("timeout\r\n");
+        return false;
       }
+      //delay(1);//超时检测
+      
+      //Srvr__write("continue\r\n");
+      }
+      //Srvr__write("continue\r\n");
   }
+  endrecv:
+    /*
+    Serial.println();
+    Srvr__write("continue?");
+    while (Srvr__available())
+    {
+      int endcode=Srvr__read();
+      if (endcode=='C') 
+      {
+        Serial.print("restart");
+        goto readagain;
+    }
+    }
+*/
 
     // Initialization
     if (Buff__bufArr[0] == 'I')
@@ -158,54 +183,21 @@ readagain:
        
         // Load data into the e-Paper 
         // if there is loading function for current channel (black or red)
-        if (EPD_dispLoad != 0) EPD_dispLoad();     //调用epd存放至显存
+        if (EPD_dispLoad != 0) EPD_dispLoad();     //调用epd中
         int wordnumber=Buff__getByte(3);//第4位是序号
         int pictype=Buff__getByte(4);//第五位是类型
         Buff__load(wordnumber,pictype);
-        if (Buff__load(wordnumber,pictype)) Serial.printf("successfuly load to %d %d",wordnumber,pictype);
-        
-
-        Srvr__write("load success\r\n");
-        Serial.printf("successfuly load to %d %d",wordnumber,pictype);
-
         Buff__bufInd = 0;
         Srvr__flush();
     }
 
-    // Initialize next channel
-    else if (Buff__bufArr[0] == 'N')
-    {
-        // Print log message: next data channel
-        Serial.print("<<<NEXT");
-
-        // Instruction code for for writting data into 
-        // e-Paper's memory
-        int code = EPD_dispMass[EPD_dispIndex].next;
-
-        // e-Paper '2.7' (index 8) needs inverting of image data bits
-        EPD_invert = (EPD_dispIndex == 8);
-
-        // If the instruction code isn't '-1', then...
-        if (code != -1)
-        {
-            // Print log message: instruction code
-            Serial.printf(" %d", code);
-
-            // Do the selection of the next data channel
-            EPD_SendCommand(code);
-            delay(2);
-        }
-
-        // Setup the function for loading choosen channel's data
-        EPD_dispLoad = EPD_dispMass[EPD_dispIndex].chRd;
-
-        Buff__bufInd = 0;
-        Srvr__flush();
-    }
 
     // Show loaded picture
     else if (Buff__bufArr[0] == 'S')
     {
+        int wordnumber=Buff__getByte(3);//第4位是序号
+        int pictype=Buff__getByte(4);//第五位是类型
+        EPD_loadA(wordnumber,pictype);
         EPD_dispMass[EPD_dispIndex].show();
                 
         Buff__bufInd = 0;
