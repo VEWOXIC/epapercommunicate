@@ -29,7 +29,7 @@ def chs_bmpmaker(pron,chs):
     # 创建Draw对象:
     draw = ImageDraw.Draw(image)
     draw.text((5,5),pron,font=font1,fill=0)
-    draw.text((5,27),chs,font=font2,fill=0)
+    draw.multiline_text((5,29),chs,font=font2,fill=0)
     #image.save('code.bmp', 'bmp')
     return image
 def framemaker(image,wordindex,pictype):
@@ -58,7 +58,7 @@ def send_new_word(new_word,pron,chs,word_index,comport):
         #print(a)
         if a=='Ok!\n':
             break
-    blueserial.sereenshow(comport,word_index,0)
+    blueserial.screenshow(comport,word_index,0)
     time.sleep(5)
     image=chs_bmpmaker(pron,chs)
     byteslist=framemaker(image,word_index,1)#释义页1
@@ -67,4 +67,4 @@ def send_new_word(new_word,pron,chs,word_index,comport):
         if a=='Ok!\n':
             break
     #time.sleep(0.05)'''
-    blueserial.sereenshow(comport,word_index,1)
+    blueserial.screenshow(comport,word_index,1)

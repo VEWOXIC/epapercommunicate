@@ -10,9 +10,6 @@ def sendframe(framedata,comport):
         #print(str(ser.readline()))
         
         print("PC:frame send done...")
-        #print(str(ser.readline()))
-        #time.sleep(0.001)
-        #ser.write(b'C')
     ser.write(bytes(framedata[4500:]))
     #print(str(ser.readline()))
     endcode=str(ser.readline(),encoding='utf-8')
@@ -20,7 +17,7 @@ def sendframe(framedata,comport):
     ser.close()
     return endcode
 
-def sereenshow(comport,wordindex,pictype):
+def screenshow(comport,wordindex,pictype):
     ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
     ser.write(b'I')
     print(str(ser.readline()))#每个操作前必须初始化！！！

@@ -30,23 +30,3 @@ int EPD_Init_2in9()
     delay(2);
     return 0;
 }
-
-int EPD_Init_2in9b() 
-{
-    EPD_Reset();
-    EPD_Send_4(0x01, 0x07, 0x00, 0x08, 0x00);//POWER_SETTING
-    EPD_Send_3(0x06, 0x17, 0x17, 0x17);//BOOSTER_SOFT_START
-    EPD_SendCommand(0x04);//POWER_ON
-    EPD_WaitUntilIdle();
-    
-    EPD_Send_1(0x00, 0x8F);//PANEL_SETTING
-    EPD_Send_1(0x50, 0x77);//VCOM_AND_DATA_INTERVAL_SETTING;
-    EPD_Send_1(0x30, 0x39);//PLL_CONTROL
-    EPD_Send_3(0x61, 0x80, 0x01, 0x28);//TCON_RESOLUTION
-    EPD_Send_1(0x82, 0x0A);//VCM_DC_SETTING_REGISTER
-
-    EPD_SendCommand(0x10);//DATA_START_TRANSMISSION_1  
-    delay(2);
-        Serial.printf("EPD_SendCommand  b\r\n");
-    return 0;
-}
