@@ -24,7 +24,8 @@ void setup()
 
   // Bluetooth initialization
   Srvr__btSetup();
-
+  //initialize the spiff
+  init_spiff();
   // SPI initialization
   EPD_initSPI();
 

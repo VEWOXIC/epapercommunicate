@@ -176,35 +176,34 @@ void EPD_Reset()
 
 #include "epd2in9.h"
 
-bool EPD_invert;           // If true, then image data bits must be inverted
+          // If true, then image data bits must be inverted
 int  EPD_dispIndex;        // The index of the e-Paper's type
 int  EPD_dispX, EPD_dispY; // Current pixel's coordinates (for 2.13 only)
 void(*EPD_dispLoad)();     // Pointer on a image data writting function
 
-/* Image data loading function for a-type e-Paper ----------------------------*/ 
-void EPD_loadA(int wordnumber,int pictype)
+/* Image data loading function for a-type e-Paper ----------------------------*
+void EPD_loadA()
 {
-  if (pictype==0)
+    // Get the index of the image data begin
+    int pos = 6;//6是数据位起始
+    if ((int)Buff__bufArr[4]==1) EPD_invert=true;
+    // Enumerate all of image data bytes
+    while (pos < 4742)//buffind最后的位置
     {
-        for(int i=6;i<Buff__SIZE;i++)
-        {
-            char value=pic_bank[wordnumber].word_image[i];
-            //if (EPD_invert) value = ~value;//单词页不反转
-            EPD_SendData((byte)value);
-        }
-    }
-    if (pictype==1)
-    {
-        for(int i=6;i<Buff__SIZE;i++)
-        {
-            char value=pic_bank[wordnumber].chs_image[i];
-            value = ~value;//释义页反转
-            EPD_SendData((byte)value);
-        }
-    }
-    
-}
+        // Get current byte
+        int value = Buff__getByte(pos);
 
+        // Invert byte's bits in case of '2.7' e-Paper
+        if (EPD_invert) value = ~value;
+
+        // Write the byte into e-Paper's memory
+        EPD_SendData((byte)value);
+
+        // Increment the current byte index on 2 characters
+        pos++;
+    }
+}
+*/
 
 /* Show image and turn to deep sleep mode (a-type, 4.2 and 2.7 e-Paper) ------*/
 void EPD_showA() 

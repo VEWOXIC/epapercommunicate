@@ -19,7 +19,7 @@ bool Srvr__btIsOn;// It's true when bluetooth is on
 bool Srvr__btConn;// It's true when bluetooth has connected client 
 int  Srvr__msgPos;// Position in buffer from where data is expected
 int  Srvr__length;// Length of loaded data
-
+bool EPD_invert=true;
 /* Client ---------------------------------------------------------------------*/
 BluetoothSerial Srvr__btClient; // Bluetooth client 
 
@@ -49,6 +49,7 @@ void Srvr__flush()
 /* Project includes ----------------------------------------------------------*/
 #include "buff.h"       // POST request data accumulator
 #include "epd.h"        // e-Paper driver
+#include "load_spiff.h"
 
 bool Srvr__btSetup()                                              
 {
@@ -99,7 +100,7 @@ bool Srvr__loop()
         while (Srvr__available())
     {
         // Read a character from 'client'
-        int q = Srvr__read();
+        uint8_t q = Srvr__read();
         //Serial.println(q);
         // Save it in the buffer and increment its index
         Buff__bufArr[Buff__bufInd++] = (byte)q;
@@ -114,7 +115,7 @@ bool Srvr__loop()
     for (int timeout=0;Srvr__available()!=1;timeout++)
     {
       if (Buff__bufInd==4742) goto endrecv;//等待循环强制退出，开始载入
-      if (timeout==999999)
+      if (timeout==999999)//
       {
         //Srvr__flush();
         Srvr__write("timeout\r\n");
@@ -183,10 +184,13 @@ bool Srvr__loop()
        
         // Load data into the e-Paper 
         // if there is loading function for current channel (black or red)
-        if (EPD_dispLoad != 0) EPD_dispLoad();     //调用epd中
-        int wordnumber=Buff__getByte(3);//第4位是序号
-        int pictype=Buff__getByte(4);//第五位是类型
-        Buff__load(wordnumber,pictype);
+        //if (EPD_dispLoad != 0) EPD_dispLoad();     //调用epd中
+        int wordnumber=Buff__getByte(3)+97;//第4位是序号(因数量少 用a-z标号)
+        int pictype=Buff__getByte(4)+48;//第五位是类型（用0、1编号）
+        char filename[]={'/',(char)wordnumber,(char)pictype};
+        load_to_spiff(SPIFFS,filename,Buff__bufArr);
+        //Srvr__write("load done\n");
+        //Buff__load(wordnumber,pictype);
         Buff__bufInd = 0;
         Srvr__flush();
     }
@@ -195,11 +199,15 @@ bool Srvr__loop()
     // Show loaded picture
     else if (Buff__bufArr[0] == 'S')
     {
-        int wordnumber=Buff__getByte(3);//第4位是序号
-        int pictype=Buff__getByte(4);//第五位是类型
-        EPD_loadA(wordnumber,pictype);
+        int wordnumber=Buff__getByte(3)+97;//第4位是序号(因数量少 用a-z标号)
+        int pictype=Buff__getByte(4)+48;//第五位是类型（用0、1编号）
+        if (pictype==49) EPD_invert=true;
+        const char filename[]={'/',(char)wordnumber,(char)pictype};
+        Serial.printf("loading %s",filename);
+        read_from_spiff(SPIFFS,filename);
+        //EPD_loadA();
         EPD_dispMass[EPD_dispIndex].show();
-                
+        //Srvr__write("show done\r\n");        
         Buff__bufInd = 0;
         Srvr__flush();
 
