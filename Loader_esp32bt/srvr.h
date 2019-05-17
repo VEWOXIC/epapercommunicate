@@ -73,21 +73,36 @@ bool Srvr__btSetup()
 /* The server state observation loop -------------------------------------------*/
 bool Srvr__loop() 
 {
+    Serial.println("in Srvr loop");
     // Bluetooh connection checking
-    if (!Srvr__btIsOn) return false;
-
-    // Show and update the state if it was changed
-    if (Srvr__btConn != Srvr__btClient.hasClient())
+    if (!Srvr__btIsOn) 
     {
-        Serial.print("Bluetooth status:");
-        Serial.println(Srvr__btConn = !Srvr__btConn ? "connected" : "disconnected"); 
+      //Serial.println("exit for not on");
+      return false;
     }
 
+    // Show and update the state if it was changed
+    /*
+    if (Srvr__btConn != Srvr__btClient.hasClient())
+    {
+        //Serial.print("Bluetooth status:");
+        //Serial.println(Srvr__btConn = !Srvr__btConn ? "connected" : "disconnected"); 
+    }
+*/
     // Exit if there is no bluetooth connection
-    if (!Srvr__btConn) return false; 
+    if (!Srvr__btClient.hasClient()) //无连接时强制退出srvr循环
+    {
+      //Serial.println("exit for no conn");
+      return false; 
+    }
 
     // Waiting the client is ready to send data
-    while(!Srvr__btClient.available()) delay(1);
+    while(!Srvr__btClient.available())
+    {
+      if(!Srvr__btClient.hasClient()) return false;
+      //Serial.println("waiting");
+      delay(1);
+    }
 
     // Set buffer's index to zero
     // It means the buffer is empty initially
@@ -213,6 +228,11 @@ bool Srvr__loop()
 
         //Print log message: show
         Serial.print("<<<SHOW");
+    }
+    else if (Buff__bufArr[0] == 'D')
+    {
+      deleteAll(SPIFFS,"/");
+      Serial.print("<<<DELETING ALL");
     }
 
     // Send message "Ok!" to continue

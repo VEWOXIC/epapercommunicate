@@ -36,5 +36,8 @@ void setup()
 /* The main loop -------------------------------------------------------------*/
 void loop()
 {
-  Srvr__loop();
+  Srvr__loop();//蓝牙断开则在mainloop中循环srvrloop 再退出
+  Serial.println("main looping");
+  //TODO:加入陀螺仪
+  //TODO：加入deepsleep
 }
