@@ -25,3 +25,12 @@ def screenshow(comport,wordindex,pictype):
     print("PC:show done")
     print(str(ser.readline()))
     ser.close()
+
+def clearspiff(comport):
+    ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
+    ser.write(b'I')
+    print(str(ser.readline()))#每个操作前必须初始化！！！
+    ser.write(b'D')
+    print("deleting...")
+    print(str(ser.readline()))
+    ser.close()

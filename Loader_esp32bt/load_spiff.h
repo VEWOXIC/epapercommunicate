@@ -149,7 +149,18 @@ void read_from_spiff(fs::FS &fs, const char * path)
     }
     //Serial.write(file.read());
     Serial.printf("reading %s\r\n",path);
-    for (int i=0;i<6;i++)
+    byte value[1]={};
+    file.read(value,1);
+    if((int)value[0]!=76)//若不是一个图片文件，则加载error页，并且置回/a0
+    {
+      Serial.print("error\r\n");
+      now_display_word=97;
+      now_display_type=48;
+      const char filename[]={'/','e','r','r','o','r','\0'};
+      read_from_spiff(SPIFFS,filename);
+      return;
+      }
+    for (int i=1;i<6;i++)
     {
       byte value[1]={};
       file.read(value,1);//移动指针到第六位

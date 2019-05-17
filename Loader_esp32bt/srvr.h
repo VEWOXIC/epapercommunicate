@@ -19,7 +19,8 @@ bool Srvr__btIsOn;// It's true when bluetooth is on
 bool Srvr__btConn;// It's true when bluetooth has connected client 
 int  Srvr__msgPos;// Position in buffer from where data is expected
 int  Srvr__length;// Length of loaded data
-bool EPD_invert=true;
+bool EPD_invert= false;//默认不反色
+int now_display_word=97,now_display_type=48;
 /* Client ---------------------------------------------------------------------*/
 BluetoothSerial Srvr__btClient; // Bluetooth client 
 
@@ -50,7 +51,16 @@ void Srvr__flush()
 #include "buff.h"       // POST request data accumulator
 #include "epd.h"        // e-Paper driver
 #include "load_spiff.h"
-
+/* display function------------------------------------------------------------*/
+void display_page(int wordnumber,int pictype)
+{
+  EPD_dispInit();
+  if (pictype==49) EPD_invert=true;
+  const char filename[]={'/',(char)wordnumber,(char)pictype,'\0'};
+  Serial.printf("loading %s",filename);
+  read_from_spiff(SPIFFS,filename);
+  EPD_dispMass[EPD_dispIndex].show();
+}
 bool Srvr__btSetup()                                              
 {
     // Name shown in bluetooth device list of App part (PC or smartphone)
@@ -73,7 +83,7 @@ bool Srvr__btSetup()
 /* The server state observation loop -------------------------------------------*/
 bool Srvr__loop() 
 {
-    Serial.println("in Srvr loop");
+    //Serial.println("in Srvr loop");
     // Bluetooh connection checking
     if (!Srvr__btIsOn) 
     {
@@ -130,7 +140,7 @@ bool Srvr__loop()
     for (int timeout=0;Srvr__available()!=1;timeout++)
     {
       if (Buff__bufInd==4742) goto endrecv;//等待循环强制退出，开始载入
-      if (timeout==999999)//
+      if (timeout==999999)//TODO：使用gettime改写超时！！！
       {
         //Srvr__flush();
         Srvr__write("timeout\r\n");
@@ -144,19 +154,7 @@ bool Srvr__loop()
       //Srvr__write("continue\r\n");
   }
   endrecv:
-    /*
-    Serial.println();
-    Srvr__write("continue?");
-    while (Srvr__available())
-    {
-      int endcode=Srvr__read();
-      if (endcode=='C') 
-      {
-        Serial.print("restart");
-        goto readagain;
-    }
-    }
-*/
+
 
     // Initialization
     if (Buff__bufArr[0] == 'I')
@@ -214,15 +212,11 @@ bool Srvr__loop()
     // Show loaded picture
     else if (Buff__bufArr[0] == 'S')
     {
-        int wordnumber=Buff__getByte(3)+97;//第4位是序号(因数量少 用a-z标号)
-        int pictype=Buff__getByte(4)+48;//第五位是类型（用0、1编号）
-        if (pictype==49) EPD_invert=true;
-        const char filename[]={'/',(char)wordnumber,(char)pictype,'\0'};
-        Serial.printf("loading %s",filename);
-        read_from_spiff(SPIFFS,filename);
-        //EPD_loadA();
-        EPD_dispMass[EPD_dispIndex].show();
-        //Srvr__write("show done\r\n");        
+        //int wordnumber=Buff__getByte(3)+97;//第4位是序号(因数量少 用a-z标号)
+        //int pictype=Buff__getByte(4)+48;//第五位是类型（用0、1编号）
+        now_display_word=Buff__getByte(3)+97;
+        now_display_type=Buff__getByte(4)+48;//保存至全局变量，便于其他地方知道当前显示图像
+        display_page(now_display_word,now_display_type);
         Buff__bufInd = 0;
         Srvr__flush();
 
