@@ -20,7 +20,7 @@ bool Srvr__btConn;// It's true when bluetooth has connected client
 int  Srvr__msgPos;// Position in buffer from where data is expected
 int  Srvr__length;// Length of loaded data
 bool EPD_invert= false;//默认不反色
-int now_display_word=97,now_display_type=48;
+RTC_DATA_ATTR int now_display_word=97,now_display_type=48;//保存到RTC中 调电可保存
 /* Client ---------------------------------------------------------------------*/
 BluetoothSerial Srvr__btClient; // Bluetooth client 
 

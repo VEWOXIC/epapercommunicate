@@ -17,8 +17,11 @@
 #include "mpu.h"//mpu functions
 /* Entry point ----------------------------------------------------------------*/
 unsigned long countstart = 0; //用于计时两边缘之间的时间 ms
+unsigned long last_wake = 0;
+unsigned long wake_now = 0;
 const unsigned int waittime=500;//两边缘之间容忍时间 ms
 bool chs_readyflag=false;//ready to change page to chs
+int time_to_sleep=60000;//无操作睡眠前容忍时间 ms
 void setup()
 {
   // Serial port initialization
@@ -35,27 +38,22 @@ void setup()
   mpu_init();
   // Initialization is complete
   Serial.print("\r\nOk!\r\n");
+  last_wake=millis();
 }
 
 /* The main loop -------------------------------------------------------------*/
 void loop()
 {
-  Srvr__loop();//蓝牙断开则在mainloop中循环srvrloop 再退出
+  wake_now = millis();
+  if((wake_now-last_wake)>time_to_sleep)
+  {
+    esp_sleep_enable_ext0_wakeup(GPIO_NUM_33,1); 
+    Serial.println("Going to sleep now, press p33 to wake me...");
+    esp_deep_sleep_start();
+  }
+  if (Srvr__loop()) last_wake=millis();//重置最后激活时间;//蓝牙断开则在mainloop中循环srvrloop 再退出
   //Serial.println("main looping");
   mpu_read();
-  /*
-  if (ayqueue[0]-ayqueue[sample_length-1]>30) //y旋转负方向为正边缘
-  {
-    Serial.println("y axis pos-cliff detected");
-    
-    
-  }
-  else if (ayqueue[0]-ayqueue[sample_length-1]<-30) //y旋转正向为负边缘
-  {
-    Serial.println("y axis neg-cliff detected");
-    
-    
-  }*/
   //卡片正反面翻页
 //尖峰检测函数，若单侧cliff后0.5s未检测到反向，则取消
     if (ayqueue[0]-ayqueue[sample_length-1]<-30) //y旋转正向为负边缘
@@ -81,6 +79,7 @@ void loop()
             display_page(now_display_word,now_display_type);
           }
           chs_readyflag=false;
+          last_wake=millis();//重置最后激活时间
           break;
         }
       now =millis();
@@ -114,6 +113,7 @@ void loop()
             display_page(now_display_word,now_display_type);
           }
           chs_readyflag=false;
+          last_wake=millis();//重置最后激活时间
           break;
         }
       now =millis();
@@ -140,6 +140,7 @@ void loop()
           now_display_word++;
           display_page(now_display_word,now_display_type);
           chs_readyflag=false;
+          last_wake=millis();//重置最后激活时间
           break;
         }
       now =millis();
@@ -166,6 +167,7 @@ void loop()
           now_display_word--;
           display_page(now_display_word,now_display_type);
           chs_readyflag=false;
+          last_wake=millis();//重置最后激活时间
           break;
         }
       now =millis();
