@@ -187,7 +187,7 @@ bool Srvr__loop()
         //if (EPD_dispLoad != 0) EPD_dispLoad();     //调用epd中
         int wordnumber=Buff__getByte(3)+97;//第4位是序号(因数量少 用a-z标号)
         int pictype=Buff__getByte(4)+48;//第五位是类型（用0、1编号）
-        char filename[]={'/',(char)wordnumber,(char)pictype};
+        char filename[]={'/',(char)wordnumber,(char)pictype,'\0'};
         load_to_spiff(SPIFFS,filename,Buff__bufArr);
         //Srvr__write("load done\n");
         //Buff__load(wordnumber,pictype);
@@ -202,7 +202,7 @@ bool Srvr__loop()
         int wordnumber=Buff__getByte(3)+97;//第4位是序号(因数量少 用a-z标号)
         int pictype=Buff__getByte(4)+48;//第五位是类型（用0、1编号）
         if (pictype==49) EPD_invert=true;
-        const char filename[]={'/',(char)wordnumber,(char)pictype};
+        const char filename[]={'/',(char)wordnumber,(char)pictype,'\0'};
         Serial.printf("loading %s",filename);
         read_from_spiff(SPIFFS,filename);
         //EPD_loadA();

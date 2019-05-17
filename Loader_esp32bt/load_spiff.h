@@ -169,21 +169,21 @@ void load_to_spiff(fs::FS &fs, const char * path,const char * buff)
       file.write(value,1);
     }
     file.close();
-    readFile(SPIFFS,path);
-    listDir(SPIFFS,"/",0);
+    //readFile(SPIFFS,path);
+    //listDir(SPIFFS,"/",0);
 }//TODO:改写srvr中load逻辑 代替buffload DONE
 void read_from_spiff(fs::FS &fs, const char * path)
 {
-    char path_fix[]={path[0],path[1],path[2]};
-    readFile(SPIFFS,path_fix);
-    File file = fs.open(path_fix);
+    //char path_fix[]={path[0],path[1],path[2]};
+    //readFile(SPIFFS,path);
+    File file = fs.open(path);
     if(!file)
     {
         Serial.printf("no such file\r\n");
         return;
     }
     //Serial.write(file.read());
-    Serial.printf("reading %s\r\n",path_fix);
+    Serial.printf("reading %s\r\n",path);
     for (int i=0;i<6;i++)
     {
       byte value[1]={};
