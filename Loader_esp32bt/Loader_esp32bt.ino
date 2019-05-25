@@ -15,6 +15,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "srvr.h" // Server functions
 #include "mpu.h"//mpu functions
+
 /* Entry point ----------------------------------------------------------------*/
 unsigned long countstart = 0; //用于计时两边缘之间的时间 ms
 unsigned long last_wake = 0;
@@ -53,6 +54,7 @@ void loop()
   }
   if (Srvr__loop()) last_wake=millis();//重置最后激活时间;//蓝牙断开则在mainloop中循环srvrloop 再退出
   //Serial.println("main looping");
+
   mpu_read();
   //卡片正反面翻页
 //尖峰检测函数，若单侧cliff后0.5s未检测到反向，则取消
@@ -179,5 +181,5 @@ void loop()
     }
   }
   //TODO:加入陀螺仪 DONE
-  //TODO：加入deepsleep
+  //TODO：加入deepsleep DONE
 }

@@ -51,6 +51,7 @@ void Srvr__flush()
 #include "buff.h"       // POST request data accumulator
 #include "epd.h"        // e-Paper driver
 #include "load_spiff.h"
+#include "wifi_sync.h"//wifisync functions
 /* display function------------------------------------------------------------*/
 void display_page(int wordnumber,int pictype)
 {
@@ -228,7 +229,17 @@ bool Srvr__loop()
       deleteAll(SPIFFS,"/");
       Serial.print("<<<DELETING ALL");
     }
+    else if (Buff__bufArr[0] == 'W')
+    {
+        //中间未测试WiFi用代码
+        wifi_init();
+        recvframe(SPIFFS);
 
+
+
+  
+  //WiFi测试代码结束
+    }
     // Send message "Ok!" to continue
     Srvr__write("Ok!\n");
     delay(1);

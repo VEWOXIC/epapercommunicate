@@ -16,13 +16,6 @@
 #define Buff__SIZE 4742
 int16_t     Buff__bufInd;
 char    Buff__bufArr[Buff__SIZE];
-/*
-struct pic_buff
-{
-    char word_image[Buff__SIZE];
-    char chs_image[Buff__SIZE];
-};
-static pic_buff pic_bank[8]={};//待解决内存限制
 /* Reads a byte from the buffer at specified position ------------------------*/
 int Buff__getByte(int index)
 {
