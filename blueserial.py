@@ -31,7 +31,7 @@ def clearspiff(comport):
     ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
     ser.write(b'I')
     print(str(ser.readline()))#每个操作前必须初始化！！！
-    ser.write(b'D')
+    ser.write(b'C')
     print("deleting...")
     print(str(ser.readline()))
     ser.close()
@@ -40,15 +40,19 @@ def rename(comport,name):
     ser.write(bytes('R/'+name,encoding='utf-8')+bytes([0]))
     print(str(ser.readline()))
     ser.close()
-def wifi_sync(comport,ssid,password):
+def wifi_sync(comport,ssid,password,word_index):
     ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
-    ser.write(bytes('W'+ssid,encoding='utf-8')+bytes([0])+bytes(password,encoding='utf-8')+bytes([0]))
-    print(bytes('W'+ssid,encoding='utf-8')+bytes([0])+bytes(password,encoding='utf-8')+bytes([0]))
-    #print(str(ser.readline()))
-    #frame='\0VEWOXIC\0Vewoxic16\0'
-    #ser.write(bytes(frame,encoding='utf-8'))
-    #time.sleep(0.3)
-    #ser.write(b'V')
-    #ser.write(bytes('lol'))
+    ser.write(bytes('W'+ssid,encoding='utf-8')+bytes([0])+bytes(password,encoding='utf-8')+bytes([0,word_index]))
+    #print(bytes('W'+ssid,encoding='utf-8')+bytes([0])+bytes(password,encoding='utf-8')+bytes([0]))
+    print(str(ser.readline()))
+    ser.close()
+def delete_file(comport,name):
+    ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
+    ser.write(bytes('D/'+name,encoding='utf-8')+bytes([0]))
+    print(str(ser.readline()))
+    ser.close()
+def get_daily_words(comport):
+    ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
+    ser.write(b'G')
     print(str(ser.readline()))
     ser.close()

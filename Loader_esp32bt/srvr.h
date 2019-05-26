@@ -15,7 +15,7 @@
   * load蓝牙接收图像到spiffs
   * S
   * show根据蓝牙信号写入显存
-  * D
+  * C
   * 清空Spiffs 慎用
   * W
   * 启动无线同步
@@ -236,7 +236,7 @@ bool Srvr__loop()
         Serial.print("<<<SHOW");
     }
     
-    else if (Buff__bufArr[0] == 'D')
+    else if (Buff__bufArr[0] == 'C')
     {
       deleteAll(SPIFFS,"/");
       Serial.print("<<<DELETING ALL");
@@ -260,13 +260,27 @@ bool Srvr__loop()
           j++;
         }
         Serial.println(password);
+        i++;
+        int word_index=Buff__bufArr[i];//最后一位为需要的标号
         wifi_init();
-        recvframe(SPIFFS);
-
-
-
-  
+        recvframe(SPIFFS,word_index);
+        display_page(now_display_word,now_display_type);
   //WiFi测试代码结束
+    }
+    else if (Buff__bufArr[0]=='G')
+    {
+      Serial.println("get daily words!");
+      //get_today_words();
+
+      if (get_today_words()) display_page(now_display_word,now_display_type);
+      else 
+      {
+        EPD_dispInit();
+        read_from_spiff(SPIFFS,"/syncf");
+        EPD_dispMass[EPD_dispIndex].show();
+        now_display_word=97;
+        now_display_type=48;
+      }
     }
     else if (Buff__bufArr[0]=='R')//rename a3 page
     {
@@ -277,6 +291,17 @@ bool Srvr__loop()
         //alter_name[i]='\0';
       }
       renameFile(SPIFFS,"/a3",alter_name);
+      //Serial.println(alter_name);
+    }
+    else if (Buff__bufArr[0]=='D')
+    {
+      char delete_name[20];
+      for (int i=1;i<20;i++)
+      {
+        delete_name[i-1]=Buff__bufArr[i];
+        //alter_name[i]='\0';
+      }
+      deleteFile(SPIFFS,delete_name);
       //Serial.println(alter_name);
     }
     // Send message "Ok!" to continue

@@ -31,13 +31,14 @@ def handle_client(client_socket):
     #print(request_list)
     request_line=request_list[0]
     request_file=request_line[5:-10]#拿到请求文件（数据）
-    word,_,__,___=getdata(int(request_file))
-    text=func.framemaker(func.word_bmpmaker(word),0,0)
+    word,pron,part_speech,chs=getdata(int(request_file))
+    word_text=func.framemaker(func.word_bmpmaker(word),int(request_file),0)
+    chs_text=func.framemaker(func.chs_bmpmaker(pron,part_speech+chs),int(request_file),1)
     print(request_file)
     response_start_line = "HTTP/1.1 200 OK\r\n"
     response_headers = "Server: My server\r\n"
     #response_body = "shit"
-    response =bytes( response_start_line + response_headers + "\r\n",encoding='utf-8') +bytes(text)
+    response =bytes( response_start_line + response_headers + "\r\n",encoding='utf-8') +bytes(word_text)+bytes(chs_text)
 
     # 向客户端返回响应数据
     client_socket.send(response)

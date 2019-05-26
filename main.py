@@ -13,6 +13,26 @@ comport='COM8'
 '''while True:
     a,b=input().split(',')
     blueserial.screenshow(comport,int(a),int(b))'''
-blueserial.wifi_sync(comport,'VEWOXIC','Vewoxic16')
+#init_device(comport)
+#time.sleep(2)
+blueserial.wifi_sync(comport,'VEWOXIC','Vewoxic16',0)
+blueserial.get_daily_words(comport)
 #blueserial.rename(comport,'shit')
+#blueserial.delete_file(comport,'error')
+#init_device(comport)
+#time.sleep(3)
+#blueserial.screenshow(comport,16,0)
+#send_pic_with_name(word_bmpmaker('Syncing...'),'sync',comport)
+'''sync fail pic generate
+width = 296
+height = 128
+image = Image.new('L', (width, height), (255))
+font1 = ImageFont.truetype('Arial.ttf', 30)
+font2 = ImageFont.truetype('malgun.ttf', 20)
+draw = ImageDraw.Draw(image)
+draw.text((5,5),'Error:',font=font1,fill=0)
+draw.text((5,30),'An error has occured.',font=font2,fill=0)
+draw.text((5,53),'Sync failed. :(',font=font1,fill=0)
+send_pic_with_name(image,'syncf',comport)'''
+
 
