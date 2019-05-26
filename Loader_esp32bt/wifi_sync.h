@@ -2,15 +2,15 @@
 #include <HTTPClient.h>
 #include <StreamString.h>
 HTTPClient http;
+char ssid[20];
+char password[20];
 void wifi_init()
 {
   unsigned long startconnectTime=millis();
-  Serial.begin(115200);
+  //Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   //delay(1000);
-  const char*ssid="VEWOXIC";
-  const char *password="Vewoxic16";
   WiFi.begin(ssid,password);
   while(WiFi.status()!=WL_CONNECTED)
   {
@@ -24,8 +24,9 @@ void wifi_init()
       //Serial.println("connecting...");
     }
     //delay(500);
-    Serial.println("connected");
+    
   }
+  Serial.println("connected");
 }
 void recvframe(fs::FS &fs)
 {

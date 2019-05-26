@@ -59,7 +59,7 @@ def send_new_word(new_word,pron,chs,word_index,comport):
         if a=='Ok!\n':
             break
     blueserial.screenshow(comport,word_index,0)
-    time.sleep(5)
+    time.sleep(1)
     image=chs_bmpmaker(pron,chs)
     byteslist=framemaker(image,word_index,1)#释义页1
     while True:
@@ -68,3 +68,24 @@ def send_new_word(new_word,pron,chs,word_index,comport):
             break
     #time.sleep(0.05)'''
     blueserial.screenshow(comport,word_index,1)
+def send_pic_with_name(image,name,comport):
+    byteslist=framemaker(image,0,3)#缓冲页
+    while True:
+        a=blueserial.sendframe(byteslist,comport)
+        #print(a)
+        if a=='Ok!\n':
+            break
+    blueserial.screenshow(comport,0,3)
+    blueserial.rename(comport,name)
+def init_device(comport):#clear spiffs and send error page
+    blueserial.clearspiff(comport)
+    width = 296
+    height = 128
+    image = Image.new('L', (width, height), (255))
+    font1 = ImageFont.truetype('Arial.ttf', 30)
+    font2 = ImageFont.truetype('malgun.ttf', 20)
+    draw = ImageDraw.Draw(image)
+    draw.text((5,5),'Error:',font=font1,fill=0)
+    draw.text((5,30),'An error has occured.',font=font2,fill=0)
+    draw.text((5,53),'Page not Found :(',font=font1,fill=0)
+    send_pic_with_name(image,'error',comport)

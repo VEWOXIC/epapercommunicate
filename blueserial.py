@@ -1,4 +1,5 @@
 import serial
+import time
 def sendframe(framedata,comport):
     import time
     ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
@@ -32,5 +33,22 @@ def clearspiff(comport):
     print(str(ser.readline()))#每个操作前必须初始化！！！
     ser.write(b'D')
     print("deleting...")
+    print(str(ser.readline()))
+    ser.close()
+def rename(comport,name):
+    ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
+    ser.write(bytes('R/'+name,encoding='utf-8')+bytes([0]))
+    print(str(ser.readline()))
+    ser.close()
+def wifi_sync(comport,ssid,password):
+    ser=serial.Serial(comport,115200,timeout=100,write_timeout=1)
+    ser.write(bytes('W'+ssid,encoding='utf-8')+bytes([0])+bytes(password,encoding='utf-8')+bytes([0]))
+    print(bytes('W'+ssid,encoding='utf-8')+bytes([0])+bytes(password,encoding='utf-8')+bytes([0]))
+    #print(str(ser.readline()))
+    #frame='\0VEWOXIC\0Vewoxic16\0'
+    #ser.write(bytes(frame,encoding='utf-8'))
+    #time.sleep(0.3)
+    #ser.write(b'V')
+    #ser.write(bytes('lol'))
     print(str(ser.readline()))
     ser.close()

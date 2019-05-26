@@ -8,6 +8,17 @@
   *          This file provides firmware functions:
   *           + Sending web page of the tool to a client's browser
   *           + Uploading images from client part by part
+  * framehead:
+  * I
+  * 初始化屏幕，刷新显存，每次显示前都需要执行
+  * L
+  * load蓝牙接收图像到spiffs
+  * S
+  * show根据蓝牙信号写入显存
+  * D
+  * 清空Spiffs 慎用
+  * W
+  * 启动无线同步
   *
   ******************************************************************************
   */ 
@@ -224,14 +235,31 @@ bool Srvr__loop()
         //Print log message: show
         Serial.print("<<<SHOW");
     }
+    
     else if (Buff__bufArr[0] == 'D')
     {
       deleteAll(SPIFFS,"/");
       Serial.print("<<<DELETING ALL");
     }
-    else if (Buff__bufArr[0] == 'W')
+    else if (Buff__bufArr[0] == 'W')//fixed 待加入多次get逻辑
     {
         //中间未测试WiFi用代码
+        int i=1;
+        for(int j=0;Buff__bufArr[i]!='\0';i++)
+        {
+          ssid[j]=Buff__bufArr[i];
+          //ssid[j+1]='\0';
+          j++;
+        }
+        i++;
+        Serial.println(ssid);
+        for(int j=0;Buff__bufArr[i]!='\0';i++)
+        {
+          password[j]=Buff__bufArr[i];
+          password[j+1]='\0';
+          j++;
+        }
+        Serial.println(password);
         wifi_init();
         recvframe(SPIFFS);
 
@@ -239,6 +267,17 @@ bool Srvr__loop()
 
   
   //WiFi测试代码结束
+    }
+    else if (Buff__bufArr[0]=='R')//rename a3 page
+    {
+      char alter_name[20];
+      for (int i=1;i<20;i++)
+      {
+        alter_name[i-1]=Buff__bufArr[i];
+        //alter_name[i]='\0';
+      }
+      renameFile(SPIFFS,"/a3",alter_name);
+      //Serial.println(alter_name);
     }
     // Send message "Ok!" to continue
     Srvr__write("Ok!\n");

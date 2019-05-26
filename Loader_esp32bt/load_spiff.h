@@ -40,7 +40,7 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels){
         file = root.openNextFile();
     }
 }
-
+/*
 void readFile(fs::FS &fs, const char * path){
     Serial.printf("Reading file: %s\r\n", path);
 
@@ -54,7 +54,7 @@ void readFile(fs::FS &fs, const char * path){
     while(file.available()){
         Serial.write(file.read());
     }
-}
+}*/
 /*
 void writeFile(fs::FS &fs, const char * path, const char * message){
     Serial.printf("Writing file: %s\r\n", path);
@@ -70,7 +70,7 @@ void writeFile(fs::FS &fs, const char * path, const char * message){
         Serial.println("- frite failed");
     }
 }
-*/
+
 void appendFile(fs::FS &fs, const char * path, const char * message){
     Serial.printf("Appending to file: %s\r\n", path);
 
@@ -85,7 +85,7 @@ void appendFile(fs::FS &fs, const char * path, const char * message){
         Serial.println("- append failed");
     }
 }
-
+*/
 void renameFile(fs::FS &fs, const char * path1, const char * path2){
     Serial.printf("Renaming file %s to %s\r\n", path1, path2);
     if (fs.rename(path1, path2)) {
@@ -103,6 +103,7 @@ void deleteFile(fs::FS &fs, const char * path){
         Serial.println("- delete failed");
     }
 }
+
 void deleteAll(fs::FS &fs, const char * path)
 {
   listDir(SPIFFS,path,0);
