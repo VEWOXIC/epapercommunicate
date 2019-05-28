@@ -100,3 +100,4 @@ def init_device(comport):#clear spiffs and send error page
     draw.text((5,30),'An error has occured.',font=font2,fill=0)
     draw.text((5,53),'Sync failed. :(',font=font1,fill=0)
     send_pic_with_name(image,'syncf',comport)
+    send_pic_with_name(word_bmpmaker('Sync success.'),'syncs',comport)

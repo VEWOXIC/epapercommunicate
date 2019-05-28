@@ -157,8 +157,12 @@ void read_from_spiff(fs::FS &fs, const char * path)
       Serial.print("error\r\n");
       now_display_word=97;
       now_display_type=48;
-      const char filename[]={'/','e','r','r','o','r','\0'};
+      char filename[]={'/','e','r','r','o','r','\0'};
       read_from_spiff(SPIFFS,filename);
+      EPD_dispMass[EPD_dispIndex].show();
+      delay(1500);
+      EPD_dispInit();
+      read_from_spiff(SPIFFS,"/a0");
       return;
       }
     for (int i=1;i<6;i++)

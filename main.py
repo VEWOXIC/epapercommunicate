@@ -16,6 +16,7 @@ comport='COM8'
 #init_device(comport)
 #time.sleep(2)
 blueserial.wifi_sync(comport,'VEWOXIC','Vewoxic16',0)
+#time.sleep(3)
 blueserial.get_daily_words(comport)
 #blueserial.rename(comport,'shit')
 #blueserial.delete_file(comport,'error')
@@ -34,5 +35,8 @@ draw.text((5,5),'Error:',font=font1,fill=0)
 draw.text((5,30),'An error has occured.',font=font2,fill=0)
 draw.text((5,53),'Sync failed. :(',font=font1,fill=0)
 send_pic_with_name(image,'syncf',comport)'''
+#send_pic_with_name(word_bmpmaker('Sync Stage1.'),'sync1',comport)
+#send_pic_with_name(word_bmpmaker('Sync Stage2.'),'sync2',comport)
+
 
 

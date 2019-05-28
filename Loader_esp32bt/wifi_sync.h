@@ -4,14 +4,14 @@
 HTTPClient http;
 RTC_DATA_ATTR char ssid[20];
 RTC_DATA_ATTR char password[20];//掉电保存
-char url[]="http://47.101.165.34:8005/";
+char url[]="http://159.203.0.110:8005/";
 void wifi_init()
 {
   EPD_dispInit();
   read_from_spiff(SPIFFS,"/sync");
   EPD_dispMass[EPD_dispIndex].show();
-  now_display_word=97;
-  now_display_type=48;
+  //now_display_word=97;
+  //now_display_type=48;
   unsigned long startconnectTime=millis();
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
@@ -57,10 +57,12 @@ bool recvframe(fs::FS &fs,int word_index)
       //Serial.println(framehead[3]);
       //Serial.println(framehead[4]);
       int wordnumber=(int)framehead[3]+97;//4
+      now_display_word=wordnumber;
       int pictype=(int)framehead[4]+48;//5
+      now_display_type=pictype;
       char filename[]={'/',(char)wordnumber,(char)pictype,'\0'};
       //char filename[]="/a0";
-      
+
       Serial.println(filename);
       File file = fs.open(filename,FILE_WRITE);
       file.write(framehead,6);
@@ -98,7 +100,11 @@ bool recvframe(fs::FS &fs,int word_index)
         file2.write(value2,1);
       }
       file2.close();
+      streamstr.flush();
       //测试结束 DONE 可用
+        //EPD_dispInit();
+        //read_from_spiff(SPIFFS,filename);
+        //EPD_dispMass[EPD_dispIndex].show();
     }
     else 
     {
@@ -112,16 +118,25 @@ bool recvframe(fs::FS &fs,int word_index)
     Serial.println("CONNECTION LOST");
     return false;
   }
+  
   return true;
 }
+/*
 bool get_today_words()
 {
   wifi_init();
-  for(int i=0;i<20;i++)
+  for(int i=0;i<10;i++)
   {
     if(recvframe(SPIFFS,i)) continue;
     else return false;
   }
   //display_page(now_display_word,now_display_type);
+  WiFi.disconnect();
+  Serial.println("Sync done.");
+      //EPD_dispInit();
+    //read_from_spiff(SPIFFS,"/syncs");
+    //EPD_dispMass[EPD_dispIndex].show();
+    //delay(1000);会炸！！！
+    
   return true;
-}
+}*/
