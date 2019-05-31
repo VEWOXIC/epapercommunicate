@@ -280,7 +280,7 @@ bool Srvr__loop()
       //get_today_words();
       //重写daily循环*/
       wifi_init();
-      for (int i=0;i<10;i++)
+      for (int i=0;i<20;i++)
       {
         if(recvframe(SPIFFS,i)) continue;
         else 
@@ -291,16 +291,16 @@ bool Srvr__loop()
           now_display_word=97;
           now_display_type=48;
           delay(2000);
-          goto endofrecv;
+          return true;
+          //break;
         }
       }
       WiFi.disconnect();
-      delay(1000);
       /*EPD_dispInit();
       read_from_spiff(SPIFFS,"/sync2");
       EPD_dispMass[EPD_dispIndex].show();
       now_display_word=97;
-      now_display_type=48;*/
+      now_display_type=48;
       wifi_init();
       for (int i=10;i<20;i++)
       {
@@ -317,12 +317,15 @@ bool Srvr__loop()
         }
       }
       
-      endofrecv:
-      WiFi.disconnect();
+      endofrecv:*/
       Serial.println("done");
-      return false;//强制睡眠
+      esp_sleep_enable_timer_wakeup(500000);
+      Serial.println("Forced to sleep 0.5s");
+      Serial.flush();
+      esp_deep_sleep_start();
+      //return false;//强制睡眠(通过超时
       //EPD_dispInit();
-      display_page(now_display_word=97,now_display_type=48);
+      //display_page(now_display_word=97,now_display_type=48);
       
       //
       /*

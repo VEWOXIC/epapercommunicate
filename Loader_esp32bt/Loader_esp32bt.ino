@@ -40,6 +40,18 @@ void setup()
   // Initialization is complete
   Serial.print("\r\nOk!\r\n");
   last_wake=millis();
+  //检测上次睡眠原因
+  esp_sleep_wakeup_cause_t wakeup_reason;
+
+  wakeup_reason = esp_sleep_get_wakeup_cause();
+  if (wakeup_reason==ESP_SLEEP_WAKEUP_TIMER)
+  {
+    EPD_dispInit();
+    read_from_spiff(SPIFFS,"/syncs");
+    EPD_dispMass[EPD_dispIndex].show();
+    delay(2000);
+    display_page(now_display_word,now_display_type);
+  }
 }
 
 /* The main loop -------------------------------------------------------------*/
