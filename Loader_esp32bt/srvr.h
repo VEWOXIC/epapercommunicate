@@ -1,13 +1,9 @@
 /**
   ******************************************************************************
   * @file    srvr.h
-  * @author  Waveshare Team
-  * @version V2.0.0
-  * @date    10-August-2018
-  * @brief   ESP8266 WiFi server.
-  *          This file provides firmware functions:
-  *           + Sending web page of the tool to a client's browser
-  *           + Uploading images from client part by part
+  * @author  VEWOXIC
+  * @version Unknown
+  * @brief   ESP32 bluetooth server.
   * framehead:
   * I
   * 初始化屏幕，刷新显存，每次显示前都需要执行

@@ -3,7 +3,7 @@ import blueserial
 import time
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import numpy as np
-comport='COM8'
+comport='COM10'
 #text1=input('input text1')
 #text2=input('input text2')
 
